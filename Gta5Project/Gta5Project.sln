@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtaLauncher", "GtaLauncher\GtaLauncher.csproj", "{FFA13776-4EEF-4064-997A-8B9C3978923B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{6F2AEB04-5185-4EDD-853F-F73B73C17C2D}"
+	ProjectSection(SolutionItems) = preProject
+		lib\ScriptHookV.dll = lib\ScriptHookV.dll
+		lib\ScriptHookVDotNet.asi = lib\ScriptHookVDotNet.asi
+		lib\ScriptHookVDotNet.dll = lib\ScriptHookVDotNet.dll
+		lib\ScriptHookVDotNet.xml = lib\ScriptHookVDotNet.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{7675D9A0-03AC-4B72-BAA7-74E65B9080FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{D3AE2424-1572-426B-B706-16E2E500F608}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtaClient", "GtaClient\GtaClient.csproj", "{7EF8C991-21FC-47F4-B74E-01D1FCD5190D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2046BA9-28F8-4EE8-BFBB-7903CB163090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGtaProject", "TestGtaProject\TestGtaProject.csproj", "{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{54E47C8F-27BE-44EE-8659-0E04B89E7ED5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyLoader", "AssemblyLoader\AssemblyLoader.csproj", "{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFA13776-4EEF-4064-997A-8B9C3978923B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA13776-4EEF-4064-997A-8B9C3978923B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA13776-4EEF-4064-997A-8B9C3978923B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA13776-4EEF-4064-997A-8B9C3978923B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D} = {7675D9A0-03AC-4B72-BAA7-74E65B9080FA}
+		{603E11FE-E7E1-40FD-A1C4-C14B99059DA7} = {F2046BA9-28F8-4EE8-BFBB-7903CB163090}
+		{6AD8C4AF-FC67-4E27-A2A4-F83C472E4438} = {54E47C8F-27BE-44EE-8659-0E04B89E7ED5}
+	EndGlobalSection
+EndGlobal
