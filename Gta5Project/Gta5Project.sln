@@ -12,9 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtaLauncher", "GtaLauncher\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{6F2AEB04-5185-4EDD-853F-F73B73C17C2D}"
 	ProjectSection(SolutionItems) = preProject
-		lib\x64\dsound.dll = lib\x64\dsound.dll
 		lib\ScriptHookV.dll = lib\ScriptHookV.dll
-		lib\ScriptHookVDotNet.dll = lib\ScriptHookVDotNet.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{7675D9A0-03AC-4B72-BAA7-74E65B9080FA}"
