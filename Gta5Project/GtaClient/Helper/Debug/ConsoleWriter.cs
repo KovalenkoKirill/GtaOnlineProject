@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,14 @@ namespace GtaClient.Helper.Debug
 
     public class ConsoleWriter : Script
     {
-        Ped ped;
         public ConsoleWriter()
         {
             Tick += OnTick;
             Interval = 100;
-            ped = GTA.World.CreateRandomPed(Game.Player.Character.Position.Around(1));
+            using (StreamWriter writer = new StreamWriter("text.txt"))
+            {
+                writer.Write($@"{DateTime.Now} :Atatch");
+            }
 #if DEBUG
             DebugExtention.ShowConsoleWindow();
 #endif
@@ -27,17 +30,6 @@ namespace GtaClient.Helper.Debug
 
         void OnTick(object sender, EventArgs e)
         {
-            Console.Clear();
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            if (!ped.IsRunning && !ped.IsWalking)
-            {
-                ped.Task.GoTo(Game.Player.Character.Position);
-            }
-
-            watch.Stop();
-
-            Console.WriteLine($"ElapsedMilliseconds:{watch.ElapsedMilliseconds}");
         }
     }
 }
