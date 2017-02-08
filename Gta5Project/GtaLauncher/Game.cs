@@ -1,4 +1,4 @@
-﻿using GtaLauncher.injector;
+﻿using GtaLauncher.confuguration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,33 +23,22 @@ namespace GtaLauncher
 
         public int TimeOutSec = 60;
 
-        public string PathToExe = @"C:\Games\Grand Theft Auto V\GTAVLauncher.exe";
+        public string PathToExe;
 
         public string processName = @"GTA5";
 
         public string AssemblyPath = $@"{AppDomain.CurrentDomain.BaseDirectory}lib\";
 
-        private DllInjectionResult loaderResult;
-
-        public DllInjectionResult LoaderResult
-        {
-            get
-            {
-                return loaderResult;
-            }
-            set
-            {
-                loaderResult = value;
-            }
-        }
 
         public Game()
         {
+            
             GtaDomain = AppDomain.CreateDomain("GTA");
         }
 
         public void Start()
         {
+            PathToExe = $@"{Configuration.Instanse.GamePath}GTAVLauncher.exe";
             ProcessStartInfo startInfo = new ProcessStartInfo(PathToExe);
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
@@ -89,7 +78,7 @@ namespace GtaLauncher
 
         public void Dispose()
         {
-            gtaProcess.Kill();
+            gtaProcess?.Kill();
         }
     }
 }

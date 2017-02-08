@@ -1,17 +1,12 @@
-﻿using System;
+﻿using GtaLauncher.confuguration;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace GtaLauncher
 {
@@ -32,11 +27,29 @@ namespace GtaLauncher
         {
             try
             {
+                if(string.IsNullOrEmpty(Configuration.Instanse.GamePath))
+                {
+                    if (!SelectPath()) return;
+                }
                 game.Start();
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 game.Dispose();
             }
+        }
+
+        private bool SelectPath()
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                Configuration.Instanse.GamePath = dialog.FileName + "/";
+                return true;
+            }
+            return false;
         }
     }
 }
