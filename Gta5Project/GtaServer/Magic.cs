@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace GtaServer
 {
-    public class Class1
-    {
-    }
+    class MagicAttribute : Attribute { }
 }
