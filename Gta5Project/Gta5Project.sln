@@ -19,6 +19,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2046BA9-28F8-4EE8-BFBB-7903CB163090}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGtaProject", "TestGtaProject\TestGtaProject.csproj", "{603E11FE-E7E1-40FD-A1C4-C14B99059DA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7EF8C991-21FC-47F4-B74E-01D1FCD5190D} = {7EF8C991-21FC-47F4-B74E-01D1FCD5190D}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{54E47C8F-27BE-44EE-8659-0E04B89E7ED5}"
 EndProject

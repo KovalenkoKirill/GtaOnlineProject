@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using DataContact;
+using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,14 +25,15 @@ namespace GtaServer
 
         public float Latency { get; set; }
 
-        public Player Player { get; internal set; }
+        public ServerPlayer Player { get; internal set; }
 
         public byte[] _session { get; private set; }
 
-        public Client(NetConnection connection,Player player)
+        public Client(NetConnection connection, ServerPlayer player)
         {
             this.NetConnection = connection;
             this.Player = player;
+            GetSessionToken();
         }
 
         public DateTime SessionCreatingTime
@@ -51,6 +53,16 @@ namespace GtaServer
             byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
             byte[] key = Guid.NewGuid().ToByteArray();
             this._session = time.Concat(key).ToArray();
+        }
+
+        public NetSendResult Send<T>(T obj,NetDeliveryMethod method = NetDeliveryMethod.Unreliable,int chanel = 0)
+        {
+            StandardPackage<T> package = new StandardPackage<T>(obj, this._session);
+            NetOutgoingMessage responseMessage = Server.Instanse.NetServer.CreateMessage();
+            byte[] responseBytes = package.Serialize();
+            responseMessage.Data = responseBytes;
+            responseMessage.LengthBytes = responseBytes.Length;
+            return NetConnection.SendMessage(responseMessage, method, chanel);
         }
 
         public override int GetHashCode()

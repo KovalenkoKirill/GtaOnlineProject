@@ -17,11 +17,29 @@ namespace DataContact
         [ProtoMember(1)]
         public PacketType type { get; set; }
 
-        [ProtoMember(2, DataFormat = DataFormat.FixedSize)]
+        [ProtoMember(2,DynamicType =true,IsRequired =false,Options =MemberSerializationOptions.Packed)]
         public byte[] hash { get; set; }
 
         [ProtoMember(3, DynamicType = true)]
         public T data { get; set; }
+
+        public bool HasSession
+        {
+            get
+            {
+                return hash != null;
+            }
+        }
+
+        public string Session
+        {
+            get
+            {
+                return Convert.ToBase64String(hash);
+            }
+        }
+
+        public StandardPackage() { }
 
         public StandardPackage(T obj,byte[] hash)
         {
@@ -32,6 +50,10 @@ namespace DataContact
             }
             this.data = obj;
             this.hash = hash;
+            if(this.hash == null)
+            {
+                this.hash = new byte[0];
+            }
             this.type = type;
         }
 
@@ -40,6 +62,10 @@ namespace DataContact
             this.data = obj;
             this.hash = hash;
             this.type = type;
+            if (this.hash == null)
+            {
+                this.hash = new byte[0];
+            }
         }
 
         public byte [] Serialize()
@@ -55,7 +81,14 @@ namespace DataContact
         {
             using (var stream = new MemoryStream(_input))
             {
-                return Serializer.Deserialize<StandardPackage<T>>(stream);
+                try
+                {
+                    return Serializer.Deserialize<StandardPackage<T>>(stream);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using GtaServer.interfaces;
+﻿using DataContact;
+using GtaServer.interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace GtaServer.Modules
 {
     public class Authorization : IAuthorization
     {
-        public Player Autorize(string login, string pass)
+        public ServerPlayer Autorize(string login, string pass)
         {
             if(Server.Instanse.configuration.devMode)
             {
-                if(login.ToLower() == "dev" && pass.ToLower() == "dev")
-                return new Player()
+                if(login.ToLower() == "dev")
+                return new ServerPlayer()
                 {
                     DisplayName = "Player1",
                     Health = 100

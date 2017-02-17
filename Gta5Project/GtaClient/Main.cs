@@ -17,6 +17,8 @@ namespace GtaClient
 
         public NetClient Client { get; private set; }
 
+        public string Session { get; private set; }
+
         public MainClient(ClientConfiguration configuration)
         {
             this.Configuration = configuration;
@@ -53,16 +55,27 @@ namespace GtaClient
             Client.SendMessage(message, deliveryMethod);
         }
 
-        public void Autorization(string login,string password)
+        public bool Autorization(string login, string password)
         {
             AuthorizationRequest request = new AuthorizationRequest()
             {
                 Name = login,
                 Password = password,
-                GameVersion = ((GameVersion)(byte)GTA.Game.Version)
+                GameVersion = ((GameVersion)(byte)0)
             };
             StandardPackage<AuthorizationRequest> requestPack = new StandardPackage<AuthorizationRequest>(request, null);
-            SendPackage(requestPack);
+            NetOutgoingMessage message = Client.CreateMessage();
+            message.Data = requestPack.Serialize();
+            Client.Connect(Configuration.ServerAdress, Configuration.ServerPort, message);
+            NetIncomingMessage responseMessage = Client.WaitMessage(10000);
+            if (responseMessage == null) return false;
+            StandardPackage<AuthorizationResponse> responsePack = StandardPackage<AuthorizationResponse>.GetStandardPackage(responseMessage.Data);
+            if (responsePack.data.Success)
+            {
+                this.Session = responsePack.data.Session;
+                return true;
+            }
+            return false;
         }
     }
 }

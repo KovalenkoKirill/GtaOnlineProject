@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataContact;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace GtaServer.interfaces
         /// <param name="login">Логин</param>
         /// <param name="pass">Пароль</param>
         /// <returns></returns>
-        Player Autorize(string login, string pass);
+        ServerPlayer Autorize(string login, string pass);
     }
 }

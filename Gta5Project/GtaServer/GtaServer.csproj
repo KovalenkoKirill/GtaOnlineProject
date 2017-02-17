@@ -53,12 +53,15 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ILogger.cs" />
+    <Compile Include="Core\IHandler.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Exception\NullSessionException.cs" />
+    <Compile Include="Core\HandleAttribute.cs" />
+    <Compile Include="CustomHandlers\UpdatePlayerPosotion.cs" />
     <Compile Include="interfaces\IAuthorization.cs" />
     <Compile Include="Magic.cs" />
     <Compile Include="Modules\Autorizecs.cs" />
-    <Compile Include="Player\Player.cs" />
+    <Compile Include="Player\ServerPlayer.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

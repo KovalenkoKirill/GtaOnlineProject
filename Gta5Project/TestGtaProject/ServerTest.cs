@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GtaServer;
 using TestGtaProject.forServer;
 using TestConfiguration = TestGtaProject.forServer.TestConfiguration;
+using System.Threading;
 
 namespace TestGtaProject
 {
@@ -34,10 +35,11 @@ namespace TestGtaProject
             FakeClient client = new FakeClient(new ClientConfiguration()
             {
                 ServerAdress = "127.0.0.1",
-                ServerPort = configuration.serverPort
-            });
+                ServerPort = configuration.serverPort,
+            },configuration.logger);
             client.Connect();
             client.Autorization("dev", "dev");
+            Thread.Sleep(20000);
         }
     }
 }

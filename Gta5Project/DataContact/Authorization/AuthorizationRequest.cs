@@ -12,10 +12,13 @@ namespace DataContact.Authorization
     [DataType(PacketType.authorization)]
     public class AuthorizationRequest
     {
+        [ProtoMember(1)]
         public string Name { get; set; }
 
+        [ProtoMember(2)]
         public string Password { get; set; }
 
+        [ProtoMember(3)]
         public GameVersion GameVersion { get; set; }
     }
 }

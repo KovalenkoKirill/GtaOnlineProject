@@ -8,7 +8,9 @@ namespace GtaServer.DataContact
 {
     public enum PacketType : byte
     {
+        ALL,
         unknown,
-        authorization
+        authorization,
+        playerInfo
     }
 }

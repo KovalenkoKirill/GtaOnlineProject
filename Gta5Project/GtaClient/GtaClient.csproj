@@ -55,9 +55,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientConfiguration.cs" />
+    <Compile Include="ClientEvent.cs" />
     <Compile Include="Helper\Debug\ConsoleWriter.cs" />
     <Compile Include="Helper\Debug\DebugExtention.cs" />
+    <Compile Include="Logger\Debug\DebugLogger.cs" />
+    <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="PlayerSynchronization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
