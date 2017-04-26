@@ -48,8 +48,7 @@ namespace TestGtaProject
                     Player = new Player()
                     {
                         DisplayName = "dev",
-                        Name = "dev",
-                        Health = 100
+                        Name = "dev"
                     }
                 }, null);
             byte[] bytesResponse = response.Serialize();

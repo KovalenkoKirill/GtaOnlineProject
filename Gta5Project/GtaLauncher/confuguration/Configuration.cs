@@ -17,7 +17,7 @@ namespace GtaLauncher.confuguration
         public string ServerAdress { get; set; }
 
         [Magic]
-        public string ServerPort { get; set; }
+        public int ServerPort { get; set; }
 
         private static Configuration _instanse;
 
@@ -40,6 +40,7 @@ namespace GtaLauncher.confuguration
 
         private void SaveCofiguration(object sender, PropertyChangedEventArgs e)
         {
+            if (_instanse == null) return;
             using (StreamWriter writer = new StreamWriter("Configuration.json"))
             {
                 writer.Write(JsonConvert.SerializeObject(this));

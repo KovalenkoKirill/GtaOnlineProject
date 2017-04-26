@@ -14,12 +14,18 @@ namespace GtaServer.Modules
         {
             if(Server.Instanse.configuration.devMode)
             {
-                if(login.ToLower() == "dev")
-                return new ServerPlayer()
+                if (login.ToLower().Contains("dev"))
                 {
-                    DisplayName = "Player1",
-                    Health = 100
-                };
+                    ServerPlayer player = Server.Instanse.DataManager.GetServerPlayer(login);
+                    if(player == null)
+                    {
+                        player = Server.Instanse.DataManager.GetDefault("dev");
+                    }
+                    player.player.PlayerId = Guid.NewGuid();
+                    player.player.PedInfo.PedId = (uint)new Random().Next();
+                    player.Login = login;
+                    return player;
+                }
             }
             else
             {

@@ -38,6 +38,10 @@
       <HintPath>..\packages\Lidgren.Network.1.0.1\lib\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
       <Private>True</Private>
@@ -52,14 +56,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Logger.cs" />
+    <Compile Include="Config\ServerConfuguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="Configuration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataContact\DataContact.csproj">
+      <Project>{7bb66a92-70bb-440b-a2bc-587998746599}</Project>
+      <Name>DataContact</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GtaServer\GtaServer.csproj">
       <Project>{ba8b953e-b737-4fee-b1d6-09031aefc343}</Project>
       <Name>GtaServer</Name>

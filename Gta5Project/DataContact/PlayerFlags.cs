@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 namespace DataContact
 {
     [Flags]
-    public enum PlayerFlags : byte
+    public enum PedFlags : long
     {
         IsInVehicle,
-        isAfk
+        isAfk,
+        IsPlayer,
+        IsJumping,
+        IsShooting,
+        IsAiming,
+        IsParachuteOpen
     }
 }

@@ -11,6 +11,10 @@ namespace GtaServer.DataContact
         ALL,
         unknown,
         authorization,
-        playerInfo
+        playerInfo,
+        pedInfo,
+        nearPlayer,
+        playerToFar,
+        playerDisconnect
     }
 }

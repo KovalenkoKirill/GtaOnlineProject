@@ -1,0 +1,6 @@
+﻿{
+  "devMode": true,
+  "maxPlayers": 2000,
+  "maxThread": 2000,
+  "serverPort": 5999
+}

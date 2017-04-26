@@ -36,6 +36,10 @@
       <HintPath>..\packages\Lidgren.Network.1.0.1\lib\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
       <Private>True</Private>
@@ -51,16 +55,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\DataManager.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ILogger.cs" />
+    <Compile Include="Core\HandleAttribute.cs" />
     <Compile Include="Core\IHandler.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Exception\NullSessionException.cs" />
-    <Compile Include="Core\HandleAttribute.cs" />
     <Compile Include="CustomHandlers\UpdatePlayerPosotion.cs" />
     <Compile Include="interfaces\IAuthorization.cs" />
     <Compile Include="Magic.cs" />
     <Compile Include="Modules\Autorizecs.cs" />
+    <Compile Include="Modules\SynchronizationManager.cs" />
     <Compile Include="Player\ServerPlayer.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

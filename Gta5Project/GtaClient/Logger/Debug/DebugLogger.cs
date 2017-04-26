@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GtaClient.Helper.Debug;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,22 +15,30 @@ namespace GtaClient.Logger
             Write($@"Exception : {message}
                     Message:{exception.Message},
                     StackTrace:{exception.StackTrace}
-");
+",ConsoleColor.Red);
+
+        }
+
+        public Debuglogger()
+        {
+            DebugExtention.ShowConsoleWindow();
         }
 
         public void Info(string message)
         {
-            Write($"Info : {message}");
+            Write($"Info : {message}", ConsoleColor.Blue);
         }
 
         public void Trace(string message)
         {
-            Write($"Trace : {message}");
+            Write($"Trace : {message}", ConsoleColor.Green);
         }
 
-        private void Write(string message)
+        private void Write(string message,ConsoleColor color)
         {
-            Debug.WriteLine($"{DateTime.Now.TimeOfDay.ToString()}: {message}");
+            Console.ForegroundColor = color;
+            Console.WriteLine($"{DateTime.Now.TimeOfDay.ToString()}: {message}");
+            Console.ResetColor();
         }
     }
 }

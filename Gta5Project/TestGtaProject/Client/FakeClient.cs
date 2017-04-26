@@ -45,6 +45,8 @@ namespace TestGtaProject
 
         public string Session { get; private set; }
 
+        public int clientPort = -1;
+
         public byte [] SessionAsByte { get; private set; }
 
         Thread ProcessMessagesThread;
@@ -62,7 +64,7 @@ namespace TestGtaProject
         {
             NetPeerConfiguration connectionConfig = new NetPeerConfiguration("GTAVOnline");
             connectionConfig.AutoExpandMTU = true;
-            connectionConfig.Port = GetOpenUdpPort();
+            connectionConfig.Port = clientPort == -1 ? GetOpenUdpPort(): clientPort;
             connectionConfig.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
             connectionConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             connectionConfig.EnableMessageType(NetIncomingMessageType.Data);

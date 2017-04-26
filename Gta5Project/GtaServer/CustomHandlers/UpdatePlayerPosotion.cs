@@ -7,7 +7,7 @@ using DataContact;
 
 namespace GtaServer
 {
-    [Handle(DataContact.PacketType.playerInfo)]
+    [Handle(DataContact.PacketType.pedInfo)]
     class UpdatePlayerPosotion : IHandler
     {
         public void Dispose()
@@ -18,11 +18,14 @@ namespace GtaServer
 
         public Task HandlePackage<T>(StandardPackage<T> package, Client client)
         {
-            PlayerInfo info = package.data as PlayerInfo;
-            client.Player.flags = info.flags;
-            client.Player.Position = info.Position;
-            client.Player.VehicleHealth = info.VehicleHealth;
-            client.Player.Health = info.Health;
+            try
+            {
+                PedInfo info = package.data as PedInfo;
+                client.Ped = info;
+            }catch(Exception ex)
+            {
+                Server.Instanse.Logger.Exception("", ex);
+            }
             return null;
         }
     }

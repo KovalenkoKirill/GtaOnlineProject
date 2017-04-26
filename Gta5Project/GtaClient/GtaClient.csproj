@@ -37,12 +37,17 @@
       <HintPath>..\packages\Lidgren.Network.1.0.1\lib\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ScriptHookVDotNet">
       <HintPath>..\bin\GtaLauncher\lib\ScriptHookVDotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,12 +61,21 @@
   <ItemGroup>
     <Compile Include="ClientConfiguration.cs" />
     <Compile Include="ClientEvent.cs" />
+    <Compile Include="Core\GameTaskFactory.cs" />
+    <Compile Include="Core\HandleAttribute.cs" />
+    <Compile Include="Core\IClientHandler.cs" />
+    <Compile Include="Core\OtherServerClients.cs" />
+    <Compile Include="Core\SyncPed.cs" />
+    <Compile Include="Extention\BaseTypeExtention.cs" />
+    <Compile Include="Handlers\NewPlayerHandler.cs" />
     <Compile Include="Helper\Debug\ConsoleWriter.cs" />
     <Compile Include="Helper\Debug\DebugExtention.cs" />
+    <Compile Include="Helper\Debug\ForDebug.cs" />
     <Compile Include="Logger\Debug\DebugLogger.cs" />
+    <Compile Include="Logger\EmptyLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="PlayerSynchronization.cs" />
+    <Compile Include="Core\PlayerSynchronization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace DataContact
         [ProtoMember(1)]
         public PacketType type { get; set; }
 
-        [ProtoMember(2,DynamicType =true,IsRequired =false,Options =MemberSerializationOptions.Packed)]
+        [ProtoMember(2)]
         public byte[] hash { get; set; }
 
         [ProtoMember(3, DynamicType = true)]
@@ -75,15 +75,18 @@ namespace DataContact
                 Serializer.Serialize(stream, this);
                 return stream.ToArray();
             }
+            
         }
-
         public static StandardPackage<T> GetStandardPackage(byte [] _input)
         {
             using (var stream = new MemoryStream(_input))
             {
+                stream.Seek(0, SeekOrigin.Begin);
                 try
                 {
-                    return Serializer.Deserialize<StandardPackage<T>>(stream);
+                    StandardPackage<T> result;
+                    result = Serializer.Deserialize<StandardPackage<T>>(stream);
+                    return result;
                 }
                 catch (Exception e)
                 {

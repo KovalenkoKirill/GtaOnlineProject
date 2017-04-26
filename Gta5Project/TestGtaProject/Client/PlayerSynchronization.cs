@@ -43,20 +43,7 @@ namespace TestGtaProject
 
         void SyncTask()
         {
-            while(IsWork)
-            {
 
-                PlayerInfo info = new PlayerInfo()
-                {
-                    flags = PlayerFlags.isAfk,
-                    Health = 100,
-                    Money = 3132,
-                    Position = new Vector3(100, 100, 100)
-                };
-                StandardPackage<PlayerInfo> package = new StandardPackage<PlayerInfo>(info, client.SessionAsByte);
-                client.SendPackage<PlayerInfo>(package, Lidgren.Network.NetDeliveryMethod.Unreliable);
-                Thread.Sleep(30);
-            }
         }
     }
 }

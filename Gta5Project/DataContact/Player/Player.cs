@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace DataContact
 {
     [ProtoContract]
+    [DataType(GtaServer.DataContact.PacketType.playerInfo)]
     public class Player
     {
         [ProtoMember(1)]
@@ -17,15 +18,9 @@ namespace DataContact
         public string DisplayName { get; set; }
 
         [ProtoMember(3)]
-        public Vector3 Position { get; set; }
+        public Guid PlayerId { get; set; }
 
         [ProtoMember(4)]
-        public int Health { get; set; }
-
-        [ProtoMember(5)]
-        public int VehicleHealth { get; set; }
-
-        [ProtoMember(6)]
-        public PlayerFlags flags { get; set; }
+        public PedInfo PedInfo { get; set; }
     }
 }

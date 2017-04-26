@@ -14,8 +14,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using Handlers = System.Collections.Generic.Dictionary<GtaServer.DataContact.PacketType, System.Collections.Generic.ICollection<GtaServer.IHandler>>; // Done
-
+using System.Collections.ObjectModel;
 
 namespace GtaServer
 {
@@ -43,13 +44,23 @@ namespace GtaServer
             }
         }
 
+        public DataManager DataManager { get; private set; }
+
         public Handlers handlers { get; private set; }
 
         public ServerState State { get; private set; }
 
-        internal Hashtable clients { get; set; }
+        internal ObservableCollection<Client> clients { get; set; }
 
         internal IConfiguration configuration;
+
+        public ILogger Logger
+        {
+            get
+            {
+                return this.configuration.logger;
+            }
+        }
 
         private NetServer _server;
 
@@ -69,12 +80,18 @@ namespace GtaServer
 
         private IAuthorization Authorization = new Authorization();
 
+
+        SynchronizationManager synchronizationManager;
+
         #endregion Property
 
         #region Events
 
         public event OnClientConnection OnClientConnection;
 
+        public event OnPacketReceivered OnPacketReceivered;
+
+        public event OnClientDisconnect OnClientDisconnect;
         #endregion
 
         #region init
@@ -86,7 +103,7 @@ namespace GtaServer
             this.Mode = mode;
             this.State = ServerState.Creating;
             this.configuration = configuration;
-            configuration.logger.Trace("Creating server object");
+            Logger.Trace("Creating server object");
             ThreadPool.SetMaxThreads(configuration.maxThread, configuration.maxThread);
             InizializateHandlers();
         }
@@ -104,11 +121,11 @@ namespace GtaServer
             foreach(Type type in types)
             {
                 object handle = Activator.CreateInstance(type);
-                configuration.logger.Trace($"Create {type.Name} as handle of:");
+                Logger.Trace($"Create {type.Name} as handle of:");
                 HandleAttribute [] attributes = (HandleAttribute[])type.GetCustomAttributes(typeof(HandleAttribute),false);
                 foreach(var attr in attributes)
                 {
-                    configuration.logger.Trace($"\t\t{attr.type.ToString()}");
+                    Logger.Trace($"\t\t{attr.type.ToString()}");
                     this.handlers[attr.type].Add((IHandler)handle);
                 }
             }
@@ -119,22 +136,33 @@ namespace GtaServer
         {
             this.State = ServerState.Starting;
             configuration.logger.Trace("Server starting...");
+            CreateNetworkServer();
+            clients = new ObservableCollection<Client>();
+            this.IsWork = true;
+            _getNetworkBufferThread = new Thread(GetNetworkBuffer);
+            _getNetworkBufferThread.Start();
+            this.State = ServerState.Started;
+            DataManager = new DataManager();
+            this.synchronizationManager = new SynchronizationManager();
+            DataManager.Start();
+            synchronizationManager.Start();
+        }
+
+        private void CreateNetworkServer()
+        {
             NetPeerConfiguration config = new NetPeerConfiguration("GTAVOnline");
             config.Port = this.configuration.serverPort;
+            
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-            clients = new Hashtable();
             _server = new NetServer(config);
             _server.Start();
-            configuration.logger.Trace($"Server started on {config.Port} port");
-            this.IsWork = true;
-            _getNetworkBufferThread = new Thread(GetNetworkBuffer);
-            _getNetworkBufferThread.Start();
-            this.State = ServerState.Started;
+            Logger.Trace($"Server started on {config.Port} port");
         }
+
         public void Stop()
         {
             this.State = ServerState.Stoping;
@@ -143,6 +171,7 @@ namespace GtaServer
             _getNetworkBufferThread.Abort();
             _getNetworkBufferThread = null;
             this.State = ServerState.Stoped;
+            DataManager.Dispose();
         }
         public void Restart()
         {
@@ -154,6 +183,13 @@ namespace GtaServer
             this.Stop();
             configuration.logger.Trace($"Server object is Dispose");
             this.State = ServerState.Disposed;
+        }
+
+        public void DisconnectClient(Client client)
+        {
+            this.clients.Remove(client);
+            this.OnClientDisconnect?.Invoke(client);
+            Logger.Info($"Client {client.Player.Login} disconnect");
         }
         #endregion
 
@@ -167,41 +203,58 @@ namespace GtaServer
                 int messagesCount = _server.ReadMessages(messages);
                 foreach(var message in messages)
                 {
-                    switch(message.MessageType)
+                    try
                     {
-                        case NetIncomingMessageType.Data:
-                            this.configuration.logger.Trace($"Data from {message.SenderEndPoint.Address.ToString()}");
-                            StandardPackage<object> package = StandardPackage<object>.GetStandardPackage(message.Data);
-                            string session = package.Session;
-                            if (!this.clients.ContainsKey(session))
-                            {
-                                message.SenderConnection.Deny("Client not found. Update Session");
-                                continue;
-                            }
-                            Client client = (Client)this.clients[session];
-                            if (client == null) continue;
-                            foreach(IHandler handle in handlers[package.type])
-                            {
-                                handle.HandlePackage(package, client);
-                            }
-                            break;
-                        case NetIncomingMessageType.ConnectionApproval:
-                            this.configuration.logger.Trace($"Data from {message.SenderEndPoint.Address.ToString()}");
-                            Task.Factory.StartNew(() => {
+                        switch (message.MessageType)
+                        {
+                            case NetIncomingMessageType.Data:
+                                message.SkipPadBits();
+                                byte [] data = message.ReadBytes(message.LengthBytes);
+                                StandardPackage<object> package = StandardPackage<object>.GetStandardPackage(data);
+                                if(package == null)
+                                {
+                                    Logger.Info($"UnknownPackage {Encoding.UTF8.GetString(message.Data)}");
+                                }
+                                string session = package.Session;
+                                if (this.clients.Where(x => x.Session == session).Count() == 0)
+                                {
+                                    message.SenderConnection.Deny("Client not found. Update Session");
+                                    continue;
+                                }
+                                Client client = (Client)this.clients.Where(x => x.Session == session).SingleOrDefault();
+                                if (client == null) continue;
+                                foreach (IHandler handle in handlers[package.type].AsEnumerable())
+                                {
+                                    handle.HandlePackage(package, client);
+                                }
+                                OnPacketReceivered?.Invoke(package.type, client, package);
+                                break;
+                            case NetIncomingMessageType.ConnectionApproval:
+                                this.configuration.logger.Trace($"Data from {message.SenderEndPoint.Address.ToString()}");
                                 AuthorizationHandler(message);
-                            });
-                            break;
-                        case NetIncomingMessageType.WarningMessage:
-                            string Data = Encoding.UTF8.GetString(message.Data);
-                            this.configuration.logger.Trace($"{message.MessageType.ToString()} from {message.SenderEndPoint?.Address.ToString()}: Data {Data}");
-                            break;
-
+                                break;
+                            case NetIncomingMessageType.WarningMessage:
+                                string Data = Encoding.UTF8.GetString(message.Data);
+                                this.configuration.logger.Trace($"{message.MessageType.ToString()} from {message.SenderEndPoint?.Address.ToString()}: Data {Data}");
+                                break;
+                            case NetIncomingMessageType.StatusChanged:
+                                var newStatus = (NetConnectionStatus)message.ReadByte();
+                                if(newStatus == NetConnectionStatus.Disconnected)
+                                {
+                                    
+                                }
+                                break;
+                        }
+                    }catch(Exception ex)
+                    {
+                        Logger.Exception("", ex);
                     }
                 }
                 Thread.Sleep(1);
             }
         }
 
+        #region
         public NetOutgoingMessage CreateResponse<T>(T response,byte [] hash)
         {
             StandardPackage<T> package = new StandardPackage<T>(response, hash);
@@ -220,7 +273,7 @@ namespace GtaServer
             responseMessage.LengthBytes = responseBytes.Length;
             return responseMessage;
         }
-
+        #endregion
         private void AuthorizationHandler(NetIncomingMessage message)
         {
             try
@@ -235,7 +288,7 @@ namespace GtaServer
                 if (player != null)
                 {
                     Client client = new Client(message.SenderConnection, player);
-                    this.clients.Add(client.Session, client);
+                    this.clients.Add(client);
                     NetOutgoingMessage responseMessage = CreateResponse(
                         new AuthorizationResponse()
                         {
@@ -244,6 +297,7 @@ namespace GtaServer
                             Player = player
                         }, client._session);
                     message.SenderConnection.Approve(responseMessage);
+                    Logger.Info($"Connected new player {player.player.PlayerId} {player.player.DisplayName}");
                     this.OnClientConnection?.Invoke(client);
                 }
                 else
@@ -253,7 +307,8 @@ namespace GtaServer
             }
             catch (Exception e)
             {
-                this.configuration.logger.Exception(e.Message, e);
+                message.SenderConnection.Deny("invalid package");
+                this.configuration.logger.Exception($"{Encoding.UTF8.GetString(message.Data)} {e.Message}", e);
             }
         }
     }

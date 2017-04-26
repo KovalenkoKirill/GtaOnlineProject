@@ -2,6 +2,7 @@
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,25 @@ namespace GtaServer
             }
         }
 
+        public ObservableCollection<Client> NearPlayers = new ObservableCollection<Client>();
+
         public float Latency { get; set; }
 
+        public DateTime lastUpdateTime { get; set; }
+
         public ServerPlayer Player { get; internal set; }
+
+        public PedInfo Ped
+        {
+            get
+            {
+                return Player.player.PedInfo;
+            }
+            set
+            {
+                Player.player.PedInfo = value;
+            }
+        }
 
         public byte[] _session { get; private set; }
 
@@ -33,7 +50,7 @@ namespace GtaServer
         {
             this.NetConnection = connection;
             this.Player = player;
-            GetSessionToken();
+            this._session = Utility.GetSessionToken();
         }
 
         public DateTime SessionCreatingTime
@@ -41,19 +58,11 @@ namespace GtaServer
             get
             {
                 if (string.IsNullOrEmpty(Session)) throw new NullSessionException(this, "Client session don't be null");
-                DateTime when = DateTime.FromBinary(BitConverter.ToInt64(this._session, 0));
-                return when;
+                return Utility.GetSessionDateTime(this._session);
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private void GetSessionToken()
-        {
-            byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
-            byte[] key = Guid.NewGuid().ToByteArray();
-            this._session = time.Concat(key).ToArray();
-        }
 
         public NetSendResult Send<T>(T obj,NetDeliveryMethod method = NetDeliveryMethod.Unreliable,int chanel = 0)
         {
